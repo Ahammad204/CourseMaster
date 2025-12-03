@@ -6,6 +6,7 @@ import Login from "../shared/Login/Login";
 import CourseListing from "../Pages/CourseListing/CourseListing/CourseListing";
 import AdminDashboard from "../Pages/AdminDashboard/AdminDashboard/AdminDashboard";
 import CreateCourse from "../Pages/AdminDashboard/CreateCourse/CreateCourse";
+import CourseDetails from "../Pages/CourseDetails/CourseDetails";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,9 @@ export const router = createBrowserRouter([
         },{
           path:"/courseListing",
           element:<CourseListing></CourseListing>
+        },{
+          path:"/courses/:id",
+          element:<CourseDetails></CourseDetails>
         }
     ],
   },{

@@ -5,6 +5,11 @@ import axiosPublic from "../../../utils/axiosPublic";
 const CreateCourse = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [instructor, setInstructor] = useState("");
+  const [syllabus, setSyllabus] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [tags, setTags] = useState("");
   const [modules, setModules] = useState([{ title: "", content: "" }]);
   const [loading, setLoading] = useState(false);
 
@@ -20,19 +25,31 @@ const CreateCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || modules.length === 0) return toast.error("Please fill all required fields");
+    if (!title || modules.length === 0)
+      return toast.error("Please fill all required fields");
 
     try {
       setLoading(true);
-     const res = await axiosPublic.post("/api/courses", {
+      const res = await axiosPublic.post("/api/courses", {
         title,
         description,
+        instructor,
+        syllabus,
+        price: parseFloat(price),
+        category,
+        tags: tags.split(",").map((t) => t.trim()),
         modules,
       });
       toast.success(res.data.message);
+
       // Reset form
       setTitle("");
       setDescription("");
+      setInstructor("");
+      setSyllabus("");
+      setPrice("");
+      setCategory("");
+      setTags("");
       setModules([{ title: "", content: "" }]);
     } catch (err) {
       console.error(err);
@@ -63,7 +80,60 @@ const CreateCourse = () => {
             className="textarea textarea-bordered w-full"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Instructor</label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            value={instructor}
+            onChange={(e) => setInstructor(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Syllabus</label>
+          <textarea
+            className="textarea textarea-bordered w-full"
+            value={syllabus}
+            onChange={(e) => setSyllabus(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Price (USD)</label>
+          <input
+            type="number"
+            className="input input-bordered w-full"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">Category</label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold mb-1">
+            Tags (comma separated)
+          </label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+          />
         </div>
 
         <div className="space-y-4">
@@ -82,24 +152,37 @@ const CreateCourse = () => {
                 placeholder="Module Title"
                 className="input input-bordered w-full"
                 value={mod.title}
-                onChange={(e) => handleModuleChange(index, "title", e.target.value)}
+                onChange={(e) =>
+                  handleModuleChange(index, "title", e.target.value)
+                }
                 required
               />
               <textarea
                 placeholder="Module Content"
                 className="textarea textarea-bordered w-full"
                 value={mod.content}
-                onChange={(e) => handleModuleChange(index, "content", e.target.value)}
+                onChange={(e) =>
+                  handleModuleChange(index, "content", e.target.value)
+                }
                 required
-              ></textarea>
+              />
             </div>
           ))}
-          <button type="button" onClick={addModule} className="btn btn-md text-white bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba]">
+          <button
+            type="button"
+            onClick={addModule}
+            className="btn btn-md text-white bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba]"
+          >
             Add Module
           </button>
         </div>
 
-        <button type="submit" className={`btn  text-white bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] mt-4 ${loading ? "loading" : ""}`}>
+        <button
+          type="submit"
+          className={`btn text-white bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] mt-4 ${
+            loading ? "loading" : ""
+          }`}
+        >
           {loading ? "Creating..." : "Create Course"}
         </button>
       </form>
