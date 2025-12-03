@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
+       <QueryClientProvider client={queryClient}>
         <div className="max-w-7xl p-2 md:p-0 mx-auto">
           <RouterProvider router={router} />
           <Toaster></Toaster>

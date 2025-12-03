@@ -96,7 +96,7 @@ const AuthProvider = ({ children }) => {
 
     // Check auth on refresh
   useEffect(() => {
-    fetchUser();
+    fetchUser().finally(() => setLoading(false));
   }, []);
 
   const authValues = {
