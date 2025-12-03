@@ -119,6 +119,15 @@ const Register = () => {
             required
             className="input input-bordered w-full"
           />
+          <input
+            type="number"
+            name="phone"
+            placeholder="Phone"
+            onChange={handleChange}
+            value={formData.phone}
+            required
+            className="input input-bordered w-full"
+          />
 
           <input
             type="file"
