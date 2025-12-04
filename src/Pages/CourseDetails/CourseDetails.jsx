@@ -69,7 +69,7 @@ const CourseDetails = () => {
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       {/* Course Header */}
-      <div className="bg-gradient-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] rounded-xl shadow-lg p-8 text-white">
+      <div className="bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] rounded-xl shadow-lg p-8 text-white">
         <h1 className="text-4xl font-bold mb-2">{course.title}</h1>
         <p className="text-lg">Instructor: {course.instructor}</p>
       </div>
@@ -110,7 +110,7 @@ const CourseDetails = () => {
               className={`btn w-full text-white ${
                 isEnrolled
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] hover:scale-105 transition transform"
+                  : "bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] hover:scale-105 transition transform"
               }`}
             >
               {isEnrolled ? "Already Enrolled" : "Enroll Now"}
