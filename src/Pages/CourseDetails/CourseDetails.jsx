@@ -12,6 +12,12 @@ const CourseDetails = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+
+  // Check if user already purchased this course
+  const isEnrolled = user?.purchasedCourses?.some(
+    (courseId) => courseId === id
+  );
+
   // Fetch course by ID
   useEffect(() => {
     const fetchCourse = async () => {
@@ -30,25 +36,44 @@ const CourseDetails = () => {
     fetchCourse();
   }, [id, navigate]);
 
-  const handleEnroll = () => {
+  const handleEnroll = async () => {
     if (!user) {
       navigate("/login");
       return;
     }
-    // Here you can integrate payment/enrollment logic
-    console.log("Enroll now for", course.title);
+
+    if (isEnrolled) {
+      toast("You are already enrolled in this course!");
+      return;
+    }
+
+    try {
+      const res = await axiosPublic.post("/api/create-checkout-session", {
+        courseId: course._id,
+      });
+
+      if (res.data?.url) {
+        window.location.href = res.data.url;
+      } else {
+        toast.error("Failed to start payment");
+      }
+    } catch (err) {
+      console.error("Checkout error", err);
+      toast.error(err.response?.data?.message || "Payment error");
+    }
   };
 
-  if (loading) return <Loading></Loading>;
+  if (loading) return <Loading />;
   if (!course) return null;
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       {/* Course Header */}
-      <div className="bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] rounded-xl shadow-lg p-8 text-white">
+      <div className="bg-gradient-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] rounded-xl shadow-lg p-8 text-white">
         <h1 className="text-4xl font-bold mb-2">{course.title}</h1>
         <p className="text-lg">Instructor: {course.instructor}</p>
       </div>
+
       {/* Course Image */}
       {course.image && (
         <img
@@ -81,9 +106,14 @@ const CourseDetails = () => {
             </p>
             <button
               onClick={handleEnroll}
-              className="btn w-full text-white bg-linear-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] hover:scale-105 transition transform"
+              disabled={isEnrolled}
+              className={`btn w-full text-white ${
+                isEnrolled
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-[#638efb] via-[#4f76e5] to-[#1b59ba] hover:scale-105 transition transform"
+              }`}
             >
-              Enroll Now
+              {isEnrolled ? "Already Enrolled" : "Enroll Now"}
             </button>
           </div>
 
